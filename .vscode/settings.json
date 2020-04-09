@@ -1,0 +1,20 @@
+{
+  "files.exclude": {
+    "android": true,
+    "ios": true,
+    "**/.idea": true,
+    "**/.idea.*": true,
+    "**/build": true,
+    "**/build.*": true,
+    "*.dart_tool": true,
+    "*.dart_tool.*": true,
+    ".vscode": true,
+    ".gitignore": true,
+    ".metadata": true,
+    ".packages": true,
+    "molib.iml": true,
+    "pubspec.lock": true,
+    "pubspec.yaml": true,
+    "README.md": true
+  }
+}
