@@ -14,7 +14,8 @@
     ".packages": true,
     "molib.iml": true,
     "pubspec.lock": true,
-    "pubspec.yaml": true,
-    "README.md": true
+    "README.md": true,
+    ".flutter-plugins-dependencies": true,
+    ".flutter-plugins": true
   }
 }

@@ -41,7 +41,7 @@ void main() {
       await sut.add(book);
 
       //assert
-      verify(mockDatasource.add(any)).called(1);
+      verify(mockDatasource.addBook(any)).called(1);
     });
   });
 
@@ -58,14 +58,14 @@ void main() {
         "ISBN": "ISBN-10: 0-596-52068-9",
         "Publish_Date": "2020-01-20"
       };
-      when(mockDatasource.findAll())
+      when(mockDatasource.findAllBooks())
           .thenAnswer((_) async => [BookModel.fromMap(map)]);
       //act
       var books = await sut.findAll();
 
       //assert
       expect(books, isNotEmpty);
-      verify(mockDatasource.findAll()).called(1);
+      verify(mockDatasource.findAllBooks()).called(1);
     });
   });
 
@@ -81,14 +81,14 @@ void main() {
         "ISBN": "ISBN-10: 0-596-52068-9",
         "Publish_Date": "2020-01-20"
       };
-      when(mockDatasource.find(any))
+      when(mockDatasource.findBook(any))
           .thenAnswer((_) async => BookModel.fromMap(map));
       //act
       var book = await sut.find(bookId: Identity.fromString('aaa'));
 
       //assert
       expect(book, isNotNull);
-      verify(mockDatasource.find(any)).called(1);
+      verify(mockDatasource.findBook(any)).called(1);
     });
   });
 }

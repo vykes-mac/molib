@@ -20,7 +20,7 @@ class BookRepository implements IBookRepository {
       publishDate: book.publishDate,
     );
 
-    return await _datasource.add(model);
+    return await _datasource.addBook(model);
   }
 
   @override
@@ -31,12 +31,12 @@ class BookRepository implements IBookRepository {
 
   @override
   Future<Book> find({Identity bookId}) async {
-    return await _datasource.find(bookId);
+    return await _datasource.findBook(bookId);
   }
 
   @override
   Future<List<Book>> findAll() async {
-    return await _datasource.findAll();
+    return await _datasource.findAllBooks();
   }
 
   @override
