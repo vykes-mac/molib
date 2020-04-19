@@ -63,7 +63,7 @@ void main() {
     test('should return book with created id when added succesfully', () async {
       //arrange
       when(mockShelfRepository.find(input.shelfId))
-          .thenAnswer((_) => BookShelf(id: input.shelfId));
+          .thenAnswer((_) async => BookShelf(id: input.shelfId));
 
       when(mockEntityFactory.newBook(
               title: anyNamed('title'),
@@ -86,7 +86,6 @@ void main() {
       expect(result.isRight(), true);
       expect(result.getOrElse(null).bookId, isNotNull);
       verify(mockBookRepository.add(any)).called(1);
-      verify(mockShelfRepository.update(any)).called(1);
     });
   });
 }

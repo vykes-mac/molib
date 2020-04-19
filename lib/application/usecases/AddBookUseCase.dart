@@ -35,14 +35,14 @@ class AddBookUseCase implements IAddBookUseCase {
     var bookshelf = result.getOrElse(null);
 
     await _bookRepository.add(newBook);
-    await _bookShelfRepository.update(bookshelf);
-    return _buildOutputFromNewBook(newBook);
+    return _buildOutputFromNewBook(newBook, bookshelf);
   }
 
-  Either<Failure, AddBookOutput> _buildOutputFromNewBook(Book newBook) {
+  Either<Failure, AddBookOutput> _buildOutputFromNewBook(
+      Book newBook, BookShelf bookShelf) {
     var output = AddBookOutput(
         bookId: newBook.id,
-        shelfId: newBook.shelfId,
+        shelfId: bookShelf.id,
         title: newBook.title,
         author: newBook.author,
         isbn: newBook.isbn,
