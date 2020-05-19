@@ -17,5 +17,6 @@
     "README.md": true,
     ".flutter-plugins-dependencies": true,
     ".flutter-plugins": true
-  }
+  },
+  "editor.fontSize": 20
 }
