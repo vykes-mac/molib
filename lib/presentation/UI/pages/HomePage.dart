@@ -4,6 +4,8 @@ import 'package:molib/presentation/models/Book.dart';
 import 'package:molib/presentation/models/BookShelf.dart';
 import 'package:molib/presentation/viewmodels/HomeViewModel.dart';
 
+import 'AddBookPage.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -88,7 +90,15 @@ class _HomePageState extends State<HomePage> {
           transitionOnUserGestures: true,
           tag: 'addBook',
           child: GestureDetector(
-            onTap: () {},
+            onTap: () => Navigator.push(
+                context,
+                PageRouteBuilder(
+                  fullscreenDialog: true,
+                  barrierDismissible: true,
+                  barrierColor: Colors.black38,
+                  opaque: false,
+                  pageBuilder: (BuildContext context, _, __) => AddBookPage(),
+                )),
             child: Image.asset(
               'assets/images/add_book.png',
               fit: BoxFit.cover,
