@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:molib/MoLibUIComposer.dart';
 
-import 'presentation/UI/pages/HomePage.dart';
+import 'infrastructure/factories/db_factory.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final db = await DatabaseFactory().createDatabase();
+  MoLibUIComposer.configure(db);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -10,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Virtual Library',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: MoLibUIComposer.composeHomePage(),
     );
   }
 }

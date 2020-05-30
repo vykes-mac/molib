@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:molib/presentation/UI/widgets/BookWidget.dart';
 import 'package:molib/presentation/models/Book.dart';
 import 'package:molib/presentation/models/BookShelf.dart';
+import 'package:molib/presentation/states/home_page/homepage_bloc.dart';
 import 'package:molib/presentation/viewmodels/HomeViewModel.dart';
 
-import 'AddBookPage.dart';
+abstract class HomePageDelegate {
+  Future<bool> onAddBook(BuildContext context, String shelfId);
+}
 
 class HomePage extends StatefulWidget {
+  final HomePageDelegate delegate;
+
+  HomePage({this.delegate});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -14,14 +22,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _controller = PageController(initialPage: 0);
 
-  var shelf = BookShelf('aaa');
-
-  List<BookShelf> shelves = [];
+  List<BookShelf> _shelves;
 
   @override
   void initState() {
-    shelf.books = [Book(id: "aaa", title: "Book", author: "Author")];
-    shelves.add(shelf);
+    BlocProvider.of<HomePageBloc>(context).getBooksOnShelves();
     super.initState();
   }
 
@@ -43,11 +48,22 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
           child: Stack(fit: StackFit.expand, children: [
         _background(),
-        _buildShelfUI(this.shelves)
-        //_buildUI(),
+        //_buildShelfUI(this.shelves)
+        _buildUI(),
       ])),
     );
   }
+
+  Widget _buildUI() => BlocBuilder<HomePageBloc, HomePageState>(
+        builder: (context, state) {
+          if (state.isFetching)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          else
+            return _buildShelfUI(state.shelves);
+        },
+      );
 
   _background() => Container(
         child: Image.asset(
@@ -57,6 +73,7 @@ class _HomePageState extends State<HomePage> {
       );
 
   _buildShelfUI(List<BookShelf> shelves) {
+    this._shelves = shelves;
     return PageView.builder(
       itemCount: shelves.length,
       itemBuilder: (_, idx) => _books(shelves[idx].books),
@@ -90,15 +107,7 @@ class _HomePageState extends State<HomePage> {
           transitionOnUserGestures: true,
           tag: 'addBook',
           child: GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                PageRouteBuilder(
-                  fullscreenDialog: true,
-                  barrierDismissible: true,
-                  barrierColor: Colors.black38,
-                  opaque: false,
-                  pageBuilder: (BuildContext context, _, __) => AddBookPage(),
-                )),
+            onTap: () => _showCreateBookPage(),
             child: Image.asset(
               'assets/images/add_book.png',
               fit: BoxFit.cover,
@@ -106,7 +115,16 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
-      return children;
+    }
+    return children;
+  }
+
+  _showCreateBookPage() async {
+    var shelf = _shelves[_controller.page.toInt()];
+    var book = await widget.delegate.onAddBook(context, shelf.id);
+
+    if (book) {
+      BlocProvider.of<HomePageBloc>(context).getBooksOnShelves();
     }
   }
 }

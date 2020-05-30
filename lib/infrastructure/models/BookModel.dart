@@ -41,7 +41,7 @@ class BookModel extends Book {
       "Title": title.value,
       "Author": author.value,
       "ISBN": isbn.value,
-      "publishDate": publishDate.toString()
+      "Publish_Date": publishDate.toString()
     };
   }
 }

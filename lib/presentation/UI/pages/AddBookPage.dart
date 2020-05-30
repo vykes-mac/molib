@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:molib/presentation/states/add_book_page/addbook_bloc.dart';
 
 class AddBookPage extends StatefulWidget {
+  final shelfId;
+
+  AddBookPage(this.shelfId);
+
   @override
   _AddBookPageState createState() => _AddBookPageState();
 }
@@ -10,9 +16,11 @@ class _AddBookPageState extends State<AddBookPage> {
   String _author = "";
   String _isbn = "";
   String _publishDate = "";
+  String _shelfId;
 
   @override
   void initState() {
+    _shelfId = widget.shelfId;
     super.initState();
   }
 
@@ -33,7 +41,25 @@ class _AddBookPageState extends State<AddBookPage> {
                 'assets/images/book.png',
                 fit: BoxFit.fill,
               ),
-              _buildUI()
+              BlocConsumer<AddBookBloc, AddBookState>(
+                  bloc: BlocProvider.of<AddBookBloc>(context),
+                  builder: (context, state) {
+                    if (state.isCommitting)
+                      return Center(child: CircularProgressIndicator());
+                    else
+                      return _buildUI();
+                  },
+                  listener: (context, state) {
+                    if (state.errMessage.isNotEmpty) {
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text(state.errMessage.toString()),
+                      ));
+                    }
+
+                    if (state.book != null) {
+                      Navigator.of(context).pop<bool>(true);
+                    }
+                  })
             ])),
           )),
         ),
@@ -75,7 +101,9 @@ class _AddBookPageState extends State<AddBookPage> {
             Container(
               alignment: Alignment.bottomRight,
               child: FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  addBook(context);
+                },
                 child: Text(
                   'Add',
                   style: TextStyle(
@@ -88,6 +116,15 @@ class _AddBookPageState extends State<AddBookPage> {
           ],
         ),
       );
+
+  addBook(BuildContext context) {
+    BlocProvider.of<AddBookBloc>(context).addBook(
+        title: _title,
+        author: _author,
+        isbn: _isbn,
+        publishDate: _publishDate,
+        shelfId: _shelfId);
+  }
 
   TextField _createTextField({
     String hint,

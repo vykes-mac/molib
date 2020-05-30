@@ -24,5 +24,10 @@ class PublishDate extends Equatable {
   DateTime toDate() => DateTime.parse(_value);
 
   @override
+  String toString() {
+    return this._value;
+  }
+
+  @override
   List<Object> get props => [_value];
 }

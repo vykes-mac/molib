@@ -18,6 +18,7 @@ class AddBookViewModel {
 
   Future<void> addBook(String title, String author, String isbn,
       String publishDate, String shelfId) async {
+    _errMessages = [];
     Title vtitle = Title.create(title).fold((err) {
       _errMessages.add(err.message);
       return null;

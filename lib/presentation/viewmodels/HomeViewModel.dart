@@ -23,6 +23,7 @@ class HomePageViewModel {
         _getAllBooksUseCase = getAllBooksUseCase;
 
   Future<void> getBooksOnShelves() async {
+    _shelves = [];
     var result = await _getAllBooksUseCase.execute();
     if (result.books.isEmpty) {
       await createShelf();
